@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.1.1
+
+### Documentation
+- Expanded the README to document the treatment-effect module
+  (`effect.risk_measures`) with a usage example, and to list the full
+  PyStatistics open-core ecosystem.
+
+
 ## 0.1.0
 
 ### Added

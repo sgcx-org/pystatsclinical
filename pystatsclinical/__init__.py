@@ -10,7 +10,7 @@ Usage:
     result = effect.risk_measures(15, 100, 30, 100)
 """
 
-__version__ = "0.1.0"
+__version__ = "0.1.1"
 __author__ = "Hai-Shuo"
 __email__ = "contact@sgcx.org"
 
