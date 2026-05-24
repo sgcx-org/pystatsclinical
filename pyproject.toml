@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "pystatsclinical"
-version = "0.0.1"
+version = "0.1.0"
 description = "Clinical-trial and clinical-research statistical computing for Python"
 readme = "README.md"
 license = "MIT"
@@ -20,7 +20,7 @@ keywords = [
     "statistics",
 ]
 classifiers = [
-    "Development Status :: 1 - Planning",
+    "Development Status :: 3 - Alpha",
     "Intended Audience :: Science/Research",
     "Intended Audience :: Developers",
     "License :: OSI Approved :: MIT License",
@@ -32,7 +32,10 @@ classifiers = [
     "Topic :: Scientific/Engineering :: Medical Science Apps.",
     "Typing :: Typed",
 ]
-dependencies = []
+dependencies = [
+    "numpy>=1.24",
+    "scipy>=1.10",
+]
 
 [project.optional-dependencies]
 dev = [
