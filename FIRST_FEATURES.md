@@ -1,8 +1,21 @@
 # First Features — pystatsclinical
 
-This package is currently a **reserved `0.0.1` skeleton**. This file specifies the
-first 1–2 features a future session should implement to turn it into a real
-`0.1.0` (the "harden later" step of SGC-Bio roadmap item B-3).
+> **⚠️ SUPERSEDED — historical.** This file described how to get the package from
+> a reserved skeleton to `0.1.0`. **Feature 1 shipped in 0.1.0** and the package
+> is now released. It is kept only because the *Feature 2* spec below (responder
+> analysis) is still accurate and still on the roadmap.
+>
+> For current guidance use:
+> - **[`ROADMAP.md`](ROADMAP.md)** — what to build, and the scope boundary
+> - **[`pystatsclinical/CONVENTIONS.md`](pystatsclinical/CONVENTIONS.md)** — the
+>   binding conventions, including **C5**, which rules on what lives in
+>   `pystatsbio` and is therefore out of scope here
+>
+> Ignore the "ground rules" below where they conflict with `CONVENTIONS.md`; that
+> document governs.
+
+This file specifies the first 1–2 features a future session should implement to
+turn it into a real `0.1.0` (the "harden later" step of SGC-Bio roadmap item B-3).
 
 ## Ground rules (read first)
 
