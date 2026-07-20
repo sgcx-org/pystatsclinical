@@ -30,17 +30,22 @@ audience — is this package.
 
 - [x] **Treatment-effect measures from a 2×2** — CER/EER, ARR, RR, RRR, NNT/NNH
   with Newcombe/Katz/Altman intervals. *Shipped in 0.1.0.*
-- [ ] **Responder analysis** — threshold/direction → responder rate, with the
+- [x] **Responder analysis** — threshold/direction → responder rate, with the
   proportion interval delegated to `pystatistics.hypothesis.prop_test`.
+  *Shipped in 0.2.0 as `responder.responder_rate`.*
 
-  *Verified viable — no upstream work needed.* `prop_test(x, n_trials, *,
-  conf_level=...)` returns an `HTestSolution` exposing `.estimate` (the
-  proportion) and `.conf_int`, and matches R's `prop.test()`. One decision to make
-  explicitly rather than inherit: `prop_test` defaults to `correct=True` (Yates'
-  continuity correction), so choose whether the responder rate reports the
-  corrected or uncorrected interval, expose it, and document it. The clinical
-  contribution here is only the responder *framing* (threshold + direction →
-  responder/non-responder), not the interval.
+  **Ruled:** the responder rate reports the **uncorrected** interval by default
+  (`correct=False`, diverging from `prop_test`'s `correct=True`), exposed in the
+  signature. Rationale: estimation rather than testing against a null, where
+  Yates' correction is over-conservative (Newcombe 1998); and the uncorrected
+  interval is the same Wilson interval already underpinning the Newcombe
+  risk-difference interval in `effect.risk_measures`, so one proportion-interval
+  convention holds package-wide.
+
+  **Note for future work:** `prop_test(...).estimate` is a *dict* (`{'p': ...}`),
+  not a bare float as recorded here previously, and `.conf_int` is an ndarray
+  typed as optional. `responder_rate` reads `.conf_int` and computes the rate
+  itself, so the discrepancy does not affect it.
 
 ## Tier 2 — analysis-time trial machinery
 

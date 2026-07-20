@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "pystatsclinical"
-version = "0.1.1"
+version = "0.2.0"
 description = "Clinical-trial and clinical-research statistical computing for Python"
 readme = "README.md"
 license = "MIT"
@@ -35,6 +35,7 @@ classifiers = [
 dependencies = [
     "numpy>=1.24",
     "scipy>=1.10",
+    "pystatistics>=5.1",
 ]
 
 [project.optional-dependencies]
@@ -70,3 +71,11 @@ python_version = "3.11"
 warn_return_any = true
 warn_unused_ignores = true
 strict = true
+
+# scipy ships no inline types. The `scipy-stubs` package is not usable here:
+# it requires PEP 695 `type` statements (Python >= 3.12) while this project
+# targets 3.11. Only `scipy.stats.norm.ppf` is used, at one call site, and its
+# result is immediately cast to float.
+[[tool.mypy.overrides]]
+module = "scipy.*"
+ignore_missing_imports = true

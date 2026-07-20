@@ -7,10 +7,11 @@ and number needed to treat / harm, each with a confidence interval.
 Validates against: R epiR / textbook worked examples (Altman 1998).
 """
 
-from pystatsclinical.effect._common import RiskMeasures
+from pystatsclinical.effect._common import RiskMeasuresParams, RiskMeasuresSolution
 from pystatsclinical.effect._risk_measures import risk_measures
 
 __all__ = [
-    "RiskMeasures",
+    "RiskMeasuresParams",
+    "RiskMeasuresSolution",
     "risk_measures",
 ]

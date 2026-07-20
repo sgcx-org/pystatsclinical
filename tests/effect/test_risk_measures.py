@@ -3,9 +3,9 @@
 import math
 
 import pytest
+from pystatistics.core.exceptions import ValidationError
 
 from pystatsclinical import effect
-
 
 # ---------------------------------------------------------------------------
 # Normal cases
@@ -92,35 +92,83 @@ def test_summary_is_string():
 # ---------------------------------------------------------------------------
 
 def test_events_exceed_n_raises():
-    with pytest.raises(ValueError, match="cannot exceed"):
+    with pytest.raises(ValidationError, match="cannot exceed"):
         effect.risk_measures(150, 100, 30, 100)
 
 
 def test_negative_count_raises():
-    with pytest.raises(ValueError, match="non-negative"):
+    with pytest.raises(ValidationError, match="non-negative"):
         effect.risk_measures(-1, 100, 30, 100)
 
 
 def test_empty_arm_raises():
-    with pytest.raises(ValueError, match="must be positive"):
+    with pytest.raises(ValidationError, match="must be positive"):
         effect.risk_measures(0, 0, 30, 100)
 
 
 def test_zero_cer_raises():
-    with pytest.raises(ValueError, match="undefined"):
+    with pytest.raises(ValidationError, match="undefined"):
         effect.risk_measures(10, 100, 0, 100)
 
 
 def test_bad_conf_level_raises():
-    with pytest.raises(ValueError, match="conf_level"):
+    with pytest.raises(ValidationError, match="conf_level"):
         effect.risk_measures(15, 100, 30, 100, conf_level=1.5)
 
 
 def test_bad_rd_method_raises():
-    with pytest.raises(ValueError, match="rd_method"):
+    with pytest.raises(ValidationError, match="rd_method"):
         effect.risk_measures(15, 100, 30, 100, rd_method="bogus")
 
 
 def test_non_int_count_raises():
-    with pytest.raises(TypeError):
+    with pytest.raises(ValidationError):
         effect.risk_measures(15.0, 100, 30, 100)
+
+
+# ---------------------------------------------------------------------------
+# Solution envelope (CONVENTIONS C1)
+# ---------------------------------------------------------------------------
+
+def test_returns_solution_with_uniform_metadata():
+    r = effect.risk_measures(15, 100, 30, 100)
+    assert isinstance(r, effect.RiskMeasuresSolution)
+    assert r.backend_name == "cpu"
+    assert r.timing is None
+    assert isinstance(r.warnings, tuple)
+    assert r.info["method"] == "risk_measures"
+    assert r.info["conf_level"] == 0.95
+    assert r.info["rd_method"] == "newcombe"
+
+
+def test_repr_html_wraps_summary():
+    r = effect.risk_measures(15, 100, 30, 100)
+    html = r._repr_html_()
+    assert html.startswith("<pre>") and html.endswith("</pre>")
+    assert "ARR" in html
+
+
+def test_no_warnings_on_clean_significant_result():
+    r = effect.risk_measures(15, 100, 30, 100)
+    assert r.warnings == ()
+
+
+def test_spans_null_emits_warning_shown_in_summary():
+    r = effect.risk_measures(50, 100, 51, 100)
+    assert any("unbounded above" in w for w in r.warnings)
+    assert "Note:" in r.summary()
+
+
+def test_zero_treated_events_emits_correction_warning():
+    r = effect.risk_measures(0, 100, 20, 100)
+    assert any("Haldane-Anscombe" in w for w in r.warnings)
+
+
+def test_params_payload_is_frozen():
+    import dataclasses
+
+    r = effect.risk_measures(15, 100, 30, 100)
+    params = r._result.params
+    assert isinstance(params, effect.RiskMeasuresParams)
+    with pytest.raises(dataclasses.FrozenInstanceError):
+        params.cer = 0.99  # type: ignore[misc]
